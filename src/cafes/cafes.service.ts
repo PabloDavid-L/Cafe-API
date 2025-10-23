@@ -15,6 +15,10 @@ export class CafesService {
   findOne(id: number) {
     return `This action returns a #${id} cafe`;
   }
+  
+  findByTipo(tipoId: number) {
+    return `This action returns all cafes with tipoId #${tipoId}`;
+  }
 
   update(id: number, updateCafeDto: UpdateCafeDto) {
     return `This action updates a #${id} cafe`;

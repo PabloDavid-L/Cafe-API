@@ -22,6 +22,11 @@ export class CafesController {
     return this.cafesService.findOne(+id);
   }
 
+  @Get('tipo/:tipoId')
+  findByTipo(@Param('tipoId') tipoId: string) {
+    return this.cafesService.findByTipo(+tipoId);
+  }
+  
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCafeDto: UpdateCafeDto) {
     return this.cafesService.update(+id, updateCafeDto);

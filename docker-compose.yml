@@ -5,11 +5,13 @@ services:
     volumes:
       - postgres_data_volume:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=pablo
-      - POSTGRES_DB=cafe
-      - POSTGRES_PASSWORD=cafe1234
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_DB=${DB_NAME:-cafedb}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
     ports:
       - '5432:5432'
+    security_opt:
+      - "apparmor:unconfined"
 
 volumes:
   postgres_data_volume:

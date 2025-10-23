@@ -4,48 +4,42 @@ import { Repository } from 'typeorm';
 import { CreateCafeDto } from './dto/create-cafe.dto';
 import { UpdateCafeDto } from './dto/update-cafe.dto';
 import { Cafe } from './entities/cafe.entity';
-// Asegúrate de importar la entidad Tipo si necesitas hacer validaciones o cargas explícitas
-// import { Tipo } from '../tipos/entities/tipo.entity';
+// No necesitamos QueryCafeDto aquí
 
 @Injectable()
 export class CafesService {
   constructor(
     @InjectRepository(Cafe)
     private readonly cafeRepository: Repository<Cafe>,
-    // Opcionalmente, puedes inyectar el repositorio de Tipo si necesitas validar
-    // que el tipoId proporcionado en CreateCafeDto exista, por ejemplo.
-    // @InjectRepository(Tipo)
-    // private readonly tipoRepository: Repository<Tipo>,
   ) {}
 
-  async create(createCafeDto: CreateCafeDto): Promise<Cafe> {
-    // Aquí deberías añadir lógica si necesitas validar que el 'tipo' (o tipoId)
-    // exista antes de crear el café. Por ejemplo:
-    // const tipo = await this.tipoRepository.findOne({ where: { id: createCafeDto.tipoId } });
-    // if (!tipo) {
-    //   throw new NotFoundException(`Tipo con id #${createCafeDto.tipoId} no encontrado`);
-    // }
-    //
-    // Luego, al crear, podrías asignar la entidad encontrada:
-    // const cafe = this.cafeRepository.create({ ...createCafeDto, tipo });
+async create(createCafeDto: CreateCafeDto): Promise<Cafe> {
+    // Extraemos las propiedades del DTO
+    const { name, description, tipoId } = createCafeDto;
 
-    // Si CreateCafeDto espera un objeto 'tipo' completo o solo el 'id' dependerá
-    // de cómo definas tu DTO y la lógica de negocio.
-    // Asumiendo que TypeORM puede manejar la relación con solo el id:
-    const cafe = this.cafeRepository.create(createCafeDto);
+    // Creamos el objeto para TypeORM, incluyendo la relación
+    // directamente, sin incluir tipoId por separado.
+    const cafeToCreate = {
+        name: name,
+        description: description, // Será undefined si no se envió, lo cual está bien para TypeORM
+        tipo: { id: tipoId }      // Asigna la relación por ID
+    };
+
+    const cafe = this.cafeRepository.create(cafeToCreate);
     return this.cafeRepository.save(cafe);
   }
 
-  findAll(): Promise<Cafe[]> {
-    // Si quisieras cargar explícitamente la relación 'tipo' (aunque ya está eager):
-    // return this.cafeRepository.find({ relations: ['tipo'] });
+  // findAll simple: solo trae todos los cafés (con su tipo por eager loading)
+  async findAll(): Promise<Cafe[]> {
     return this.cafeRepository.find();
+    // Podríamos añadir { relations: ['tipo'] } si quitáramos el eager,
+    // pero con eager: true en Cafe.tipo no es estrictamente necesario
   }
 
   async findOne(id: number): Promise<Cafe> {
     const cafe = await this.cafeRepository.findOne({
        where: { id },
-       // relations: ['tipo'], // No necesario si 'tipo' es eager
+       // relations: ['tipo'], // Opcional por eager loading
     });
     if (!cafe) {
       throw new NotFoundException(`Café con id #${id} no encontrado`);
@@ -53,44 +47,38 @@ export class CafesService {
     return cafe;
   }
 
+  // --- MÉTODO findByTipo RESTAURADO ---
   // Busca todos los cafés que pertenecen a un tipo específico
-  findByTipo(tipoId: number): Promise<Cafe[]> {
+  async findByTipo(tipoId: number): Promise<Cafe[]> {
+    // Usamos find con 'where' para filtrar por el ID de la relación 'tipo'
     return this.cafeRepository.find({
       where: {
-        tipo: { id: tipoId }, // Filtra por el id de la relación 'tipo'
+        tipo: { id: tipoId },
       },
-      // relations: ['tipo'], // No necesario si 'tipo' es eager
+      // relations: ['tipo'], // Opcional por eager loading
     });
   }
-
+  // --- FIN MÉTODO findByTipo RESTAURADO ---
 
   async update(id: number, updateCafeDto: UpdateCafeDto): Promise<Cafe> {
-    // preload busca la entidad por id y fusiona los nuevos datos del DTO.
-    // Si la entidad no existe, retorna undefined.
+    const preloadData: any = { ...updateCafeDto };
+    if (updateCafeDto.tipoId) {
+        preloadData.tipo = { id: updateCafeDto.tipoId };
+        delete preloadData.tipoId;
+    }
+
     const cafe = await this.cafeRepository.preload({
       id: id,
-      ...updateCafeDto,
-      // Si recibes tipoId en el DTO y necesitas asignar la relación:
-      // ...(updateCafeDto.tipoId && { tipo: { id: updateCafeDto.tipoId } })
+      ...preloadData,
     });
     if (!cafe) {
       throw new NotFoundException(`Café con id #${id} no encontrado`);
     }
-
-    // Aquí también podrías añadir validación para el tipoId si se actualiza.
-
     return this.cafeRepository.save(cafe);
   }
 
   async remove(id: number): Promise<Cafe> {
-    // Primero, busca el café para asegurarte de que existe
     const cafe = await this.findOne(id);
-    // remove retorna la entidad eliminada
     return this.cafeRepository.remove(cafe);
-    // Alternativamente, puedes usar delete que solo ejecuta la consulta
-    // const result = await this.cafeRepository.delete(id);
-    // if (result.affected === 0) {
-    //   throw new NotFoundException(`Café con id #${id} no encontrado`);
-    // }
   }
 }

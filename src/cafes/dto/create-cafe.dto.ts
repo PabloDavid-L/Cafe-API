@@ -11,9 +11,8 @@ export class CreateCafeDto {
   @IsOptional()
   description: string;
 
-  // Añadimos tipoId para recibir el ID del Tipo al que pertenece este café
-  @IsInt() // Valida que sea un número entero
-  @IsPositive() // Valida que sea un número positivo
-  @IsNotEmpty() // Asegura que no sea nulo o vacío
-  tipoId: number;
+// Cambio tipoId por tipoName
+  @IsString() 
+  @IsNotEmpty() 
+  tipoName: string; // Nombre del tipo
 }

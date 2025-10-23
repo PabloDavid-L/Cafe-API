@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { CafesService } from './cafes.service';
 import { CafesController } from './cafes.controller';
 import { Cafe } from './entities/cafe.entity';
-import { TypeOrmModule } from '@nestjs/typeorm'; // This line is already correct, no change needed for the error "Cannot find module '@nestjs/typeorm'"
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Tipo } from '../tipos/entities/tipo.entity'; // <-- Importar Tipo
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Cafe])],
+  // Añadir Tipo al array de forFeature
+  imports: [TypeOrmModule.forFeature([Cafe, Tipo])],
   controllers: [CafesController],
   providers: [CafesService],
 })

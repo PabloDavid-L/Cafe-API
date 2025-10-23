@@ -78,7 +78,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/tipos/4",
+					"raw": "http://localhost:3000/tipos/7",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -86,7 +86,7 @@
 					"port": "3000",
 					"path": [
 						"tipos",
-						"4"
+						"7"
 					]
 				}
 			},
@@ -127,7 +127,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/tipos/4",
+					"raw": "http://localhost:3000/tipos/5",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -135,7 +135,7 @@
 					"port": "3000",
 					"path": [
 						"tipos",
-						"4"
+						"5"
 					]
 				}
 			},
@@ -148,7 +148,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"La Morenita\",\n    \"description\": \"Clasico\",\n    \"tipoId\": 5\n}",
+					"raw": "{\n    \"name\": \"La Morenita\",\n    \"description\": \"Clasico\",\n    \"tipoName\": \"Saquitos\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -214,7 +214,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/cafes/tipo/5",
+					"raw": "http://localhost:3000/cafes/tipo/Saquitos",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -223,7 +223,7 @@
 					"path": [
 						"cafes",
 						"tipo",
-						"5"
+						"Saquitos"
 					]
 				}
 			},

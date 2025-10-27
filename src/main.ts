@@ -13,7 +13,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true, // Lanza error si hay propiedades no definidas en el DTO
       transform: true, // Transforma el payload a una instancia del DTO
       transformOptions: {
-         enableImplicitConversion: true, // Permite conversión implícita (ej. string de query param a number)
+        enableImplicitConversion: true, // Permite conversión implícita (ej. string de query param a number)
       },
     }),
   );

@@ -1,25 +1,39 @@
-// src/cafes/cafes.controller.ts
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { CafesService } from './cafes.service';
 import { CreateCafeDto } from './dto/create-cafe.dto';
 import { UpdateCafeDto } from './dto/update-cafe.dto';
+import { QueryCafeDto } from './dto/query-cafe.dto';
 
 @Controller('cafes')
 export class CafesController {
   constructor(private readonly cafesService: CafesService) {}
 
+  //Crea un cafe
   @Post()
   create(@Body() createCafeDto: CreateCafeDto) {
     return this.cafesService.create(createCafeDto);
   }
 
+  //Retorna todos los cafes
   @Get()
-  findAll() {
-    return this.cafesService.findAll();
+  findAll(@Query() query: QueryCafeDto) {
+    // El ValidationPipe global valida y transforma los query params
+    return this.cafesService.findAll(query);
   }
 
+  //Retorna un cafe por Id
   @Get(':id')
   findOne(@Param('id') id: string) {
+    console.log(`Obteniendo café con ID: ${id}`);
     return this.cafesService.findOne(+id);
   }
 
@@ -32,11 +46,13 @@ export class CafesController {
   }
   // --- FIN ENDPOINT MODIFICADO ---
 
+  //Actualiza un cafe
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCafeDto: UpdateCafeDto) {
     return this.cafesService.update(+id, updateCafeDto);
   }
 
+  //Elimina un cafe
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.cafesService.remove(+id);

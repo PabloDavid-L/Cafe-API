@@ -1,19 +1,18 @@
 // src/tipos/entities/tipo.entity.ts
-import { Cafe } from "src/cafes/entities/cafe.entity";
+import { Cafe } from 'src/cafes/entities/cafe.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"; // PrimaryColumn no estaba, lo quité de la importación
 
 @Entity()
 export class Tipo {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column()
-    description: string;
+  @Column()
+  description: string;
 
-    // Quita {eager: true} de aquí
-    @OneToMany(() => Cafe, (cafe) => cafe.tipo) // <--- Cambio aquí
-    cafes: Cafe[];
+  @OneToMany(() => Cafe, (cafe) => cafe.tipo)
+  cafes: Cafe[];
 }

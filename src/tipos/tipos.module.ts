@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TiposService } from './tipos.service';
 import { TiposController } from './tipos.controller';
-import { TypeOrmModule } from '@nestjs/typeorm'; // <--- 1. Importar
-import { Tipo } from './entities/tipo.entity'; // <--- 2. Importar
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Tipo } from './entities/tipo.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tipo])], // <--- 3. Añadir esto
+  imports: [TypeOrmModule.forFeature([Tipo])],
   controllers: [TiposController],
   providers: [TiposService],
 })

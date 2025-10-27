@@ -5,9 +5,9 @@ services:
     volumes:
       - postgres_data_volume:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=${DB_USER:-postgres}
-      - POSTGRES_DB=${DB_NAME:-cafedb}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=cafedb
+      - POSTGRES_PASSWORD=postgres
     ports:
       - '5432:5432'
     security_opt:

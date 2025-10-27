@@ -1,19 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTipoDto } from './dto/create-tipo.dto';
 import { UpdateTipoDto } from './dto/update-tipo.dto';
-import { InjectRepository } from '@nestjs/typeorm'; // <--- 1. Importar
-import { Tipo } from './entities/tipo.entity'; // <--- 2. Importar
-import { Repository } from 'typeorm'; // <--- 3. Importar
+import { InjectRepository } from '@nestjs/typeorm';
+import { Tipo } from './entities/tipo.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TiposService {
-  // 4. Inyectar el repositorio
   constructor(
     @InjectRepository(Tipo)
     private readonly tipoRepository: Repository<Tipo>,
   ) {}
 
-  // 5. Implementar la lógica real
   create(createTipoDto: CreateTipoDto) {
     const tipo = this.tipoRepository.create(createTipoDto);
     return this.tipoRepository.save(tipo);

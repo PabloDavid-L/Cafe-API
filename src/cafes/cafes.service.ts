@@ -30,7 +30,7 @@ export class CafesService {
 
     // Validar si el Tipo existe
     if (!tipo) {
-      // Lanzamos un error si no se encontró el tipo
+      // error si no se encontró el tipo
       throw new BadRequestException(
         `El tipo con nombre "${tipoName}" no existe.`,
       );
@@ -59,7 +59,6 @@ export class CafesService {
       limit = 10,
     } = query;
 
-    // Calcula el offset para la paginación
     const skip = (page - 1) * limit;
 
     // Construye las opciones de búsqueda para TypeORM
@@ -74,12 +73,12 @@ export class CafesService {
     };
 
     // --- Aplicar Filtros ---
-    // Filtro por nombre de tipo (case-insensitive, parcial)
+    // Filtro por nombre de tipo
     if (tipoName) {
       (options.where as any).tipo = { name: ILike(`%${tipoName}%`) };
     }
 
-    // Filtro por descripción (case-insensitive, parcial)
+    // Filtro por descripción
     if (description) {
       (options.where as any).description = ILike(`%${description}%`);
     }
@@ -111,31 +110,44 @@ export class CafesService {
   }
 
   async update(id: number, updateCafeDto: UpdateCafeDto): Promise<Cafe> {
-    const { tipoId, tipoName, ...restOfDto } = updateCafeDto as any; // Usar any para flexibilidad o crear un DTO específico
+    // Extraer tipoName y el resto de las propiedades del DTO
+    const { tipoName, ...restOfDto } = updateCafeDto;
 
-    const preloadData: any = { ...restOfDto };
+    // Preparar el objeto para la relación 'tipo'
+    let tipoRelation: Tipo | undefined = undefined;
 
+    // Si se proporciona tipoName, buscar la entidad Tipo correspondiente
     if (tipoName) {
-      const tipo = await this.tipoRepository.findOneBy({ name: tipoName });
-      if (!tipo) {
+      tipoRelation = await this.tipoRepository.findOneBy({ name: tipoName });
+      if (!tipoRelation) {
         throw new BadRequestException(
-          `El tipo con nombre "${tipoName}" no existe.`,
+          `Update failed: El tipo con nombre "${tipoName}" no existe.`,
         );
       }
-      preloadData.tipo = tipo; // Asociar la entidad encontrada
-    } else if (tipoId) {
-      // Mantenemos la lógica anterior si se envía tipoId (opcional)
-      preloadData.tipo = { id: tipoId };
+    }
+    // Si no se proporciona tipoName, tipoRelation queda undefined y la relación no se actualizará
+
+    // Crear el objeto final para preload
+    const dataToPreload: Partial<Cafe> = {
+      ...restOfDto, // Propiedades directas del Cafe (name?, description?)
+    };
+    // Solo añadimos la propiedad 'tipo' si encontramos la entidad por nombre
+    if (tipoRelation) {
+      dataToPreload.tipo = tipoRelation;
     }
 
     const cafe = await this.cafeRepository.preload({
       id: id,
-      ...preloadData,
+      ...dataToPreload,
     });
 
+    // Validar si el café original existía y guardar
     if (!cafe) {
-      throw new NotFoundException(`Café con id #${id} no encontrado`);
+      throw new NotFoundException(
+        `Update failed: Café con id #${id} no encontrado`,
+      );
     }
+
     return this.cafeRepository.save(cafe);
   }
 

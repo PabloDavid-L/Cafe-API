@@ -37,14 +37,12 @@ export class CafesController {
     return this.cafesService.findOne(+id);
   }
 
-  // --- ENDPOINT MODIFICADO ---
   // Cambia la ruta para aceptar un nombre en lugar de ID
   @Get('tipo/:tipoName')
   findByTipoName(@Param('tipoName') tipoName: string) {
     // Llama a un nuevo método en el servicio (o renombrado)
     return this.cafesService.findByTipoName(tipoName);
   }
-  // --- FIN ENDPOINT MODIFICADO ---
 
   //Actualiza un cafe
   @Patch(':id')

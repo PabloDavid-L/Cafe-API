@@ -114,7 +114,7 @@ export class CafesService {
     const { tipoName, ...restOfDto } = updateCafeDto;
 
     // Preparar el objeto para la relación 'tipo'
-    let tipoRelation: Tipo | undefined = undefined;
+    let tipoRelation: Tipo | null = null;
 
     // Si se proporciona tipoName, buscar la entidad Tipo correspondiente
     if (tipoName) {

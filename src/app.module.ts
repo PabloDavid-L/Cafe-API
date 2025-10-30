@@ -19,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
       password: 'postgres',
       database: 'cafedb',
       autoLoadEntities: true,
+      synchronize: true,
     }),
   ],
   controllers: [AppController],

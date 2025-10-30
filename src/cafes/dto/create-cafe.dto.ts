@@ -1,5 +1,4 @@
-// src/cafes/dto/create-cafe.dto.ts
-import { IsString, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, MinLength, IsInt, IsPositive } from 'class-validator';
 
 export class CreateCafeDto {
   @IsString()
@@ -11,8 +10,9 @@ export class CreateCafeDto {
   @IsOptional()
   description: string;
 
-// Cambio tipoId por tipoName
-  @IsString()
-  @IsNotEmpty()
-  tipoName: string; // Nombre del tipo
+
+  @IsInt()
+  @IsPositive() 
+  @IsNotEmpty() 
+  tipoId: number;
 }

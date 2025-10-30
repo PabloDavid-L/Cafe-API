@@ -9,6 +9,6 @@ export class Cafe {
   name: string;
   @Column()
   description: string;
-  @ManyToOne(() => Tipo, (tipo) => tipo.cafes, { eager: true })
+  @ManyToOne(() => Tipo, (tipo) => tipo.cafes, { onDelete: 'CASCADE' })
   tipo: Tipo;
 }

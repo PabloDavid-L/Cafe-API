@@ -44,7 +44,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           autoLoadEntities: true,
           
           // Sincronizar solo si NO estamos en producción
-          synchronize: !isProduction,
+          synchronize: true,
         };
       },
     }),

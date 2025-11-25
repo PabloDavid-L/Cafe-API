@@ -1,6 +1,5 @@
-// src/tipos/entities/tipo.entity.ts
 import { Cafe } from 'src/cafes/entities/cafe.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"; // PrimaryColumn no estaba, lo quité de la importación
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Tipo {

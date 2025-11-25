@@ -1,6 +1,13 @@
-// src/cafes/dto/query-cafe.dto.ts
 import { Type } from 'class-transformer';
-import { IsOptional, IsString, IsInt, Min, Max, IsIn, IsPositive } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsInt,
+  Min,
+  Max,
+  IsIn,
+  IsPositive,
+} from 'class-validator';
 
 // Valores por defecto
 const DEFAULT_PAGE = 1;

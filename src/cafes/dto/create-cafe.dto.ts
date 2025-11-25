@@ -1,4 +1,11 @@
-import { IsString, IsNotEmpty, IsOptional, MinLength, IsInt, IsPositive } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  MinLength,
+  IsInt,
+  IsPositive,
+} from 'class-validator';
 
 export class CreateCafeDto {
   @IsString()
@@ -10,9 +17,8 @@ export class CreateCafeDto {
   @IsOptional()
   description: string;
 
-
   @IsInt()
-  @IsPositive() 
-  @IsNotEmpty() 
+  @IsPositive()
+  @IsNotEmpty()
   tipoId: number;
 }

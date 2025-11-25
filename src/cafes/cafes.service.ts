@@ -17,9 +17,9 @@ export class CafesService {
     const { name, description, tipoId } = createCafeDto;
 
     const cafeToCreate = {
-        name: name,
-        description: description,
-        tipo: { id: tipoId } // Asigna la relación por ID
+      name: name,
+      description: description,
+      tipo: { id: tipoId }, // Asigna la relación por ID
     };
 
     const cafe = this.cafeRepository.create(cafeToCreate);
@@ -27,11 +27,17 @@ export class CafesService {
   }
 
   async findAll(query: QueryCafeDto): Promise<Cafe[]> {
-    const { tipoId, description, sortBy = 'id', orderBy = 'ASC', page = 1, limit = 10 } = query;
+    const {
+      tipoId,
+      description,
+      sortBy = 'id',
+      orderBy = 'ASC',
+      page = 1,
+      limit = 10,
+    } = query;
 
     const skip = (page - 1) * limit;
 
-    // 1. Construir el 'where' por separado para evitar el error TS18048
     const where: FindOptionsWhere<Cafe> = {};
 
     // Filtro por tipoId
@@ -44,12 +50,12 @@ export class CafesService {
       where.description = ILike(`%${description}%`); // Asignamos al objeto 'where'
     }
 
-    // 2. Construir las opciones finales
+    // Construir las opciones finales
     const options: FindManyOptions<Cafe> = {
       relations: ['tipo'],
-      where: where, 
+      where: where,
       order: {
-        [sortBy]: orderBy.toUpperCase() as ('ASC' | 'DESC'),
+        [sortBy]: orderBy.toUpperCase() as 'ASC' | 'DESC',
       },
       skip: skip,
       take: limit,
@@ -59,7 +65,10 @@ export class CafesService {
   }
 
   async findOne(id: number): Promise<Cafe> {
-    const cafe = await this.cafeRepository.findOne({ where: { id }, relations: ['tipo'] });
+    const cafe = await this.cafeRepository.findOne({
+      where: { id },
+      relations: ['tipo'],
+    });
     if (!cafe) {
       throw new NotFoundException(`Café con id #${id} no encontrado`);
     }
@@ -72,7 +81,6 @@ export class CafesService {
     const dataToPreload: Partial<Cafe> = { ...restOfDto };
 
     if (tipoId) {
-      // 3. Usar 'as any' para castear el objeto y evitar el error TS2739
       dataToPreload.tipo = { id: tipoId } as any;
     }
 
@@ -82,7 +90,9 @@ export class CafesService {
     });
 
     if (!cafe) {
-      throw new NotFoundException(`Update failed: Café con id #${id} no encontrado`);
+      throw new NotFoundException(
+        `Update failed: Café con id #${id} no encontrado`,
+      );
     }
     return this.cafeRepository.save(cafe);
   }
